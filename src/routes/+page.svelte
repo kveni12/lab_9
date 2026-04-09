@@ -1,5 +1,5 @@
 <script>
-	import { PUBLIC_MAPBOX_ACCESS_TOKEN } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
 	import mapboxgl from 'mapbox-gl';
@@ -13,7 +13,8 @@
 	const contourColors = ['03045e', '0077b6', '00b4d8', '90e0ef'];
 	const stationFlow = d3.scaleQuantize().domain([0, 1]).range([0, 0.5, 1]);
 
-	mapboxgl.accessToken = PUBLIC_MAPBOX_ACCESS_TOKEN;
+	const mapboxToken = env.PUBLIC_MAPBOX_ACCESS_TOKEN ?? '';
+	mapboxgl.accessToken = mapboxToken;
 
 	/** @typedef {{ Number: string, NAME: string, Lat: string | number, Long: string | number, 'Seasonal Status': string, Municipality: string, 'Total Docks': string | number }} Station */
 	/** @typedef {{ ride_id: string, bike_type: string, started_at: Date, ended_at: Date, start_station_id: string, end_station_id: string, is_member: string }} Trip */
@@ -126,6 +127,8 @@
 	}
 
 	async function initializeMap() {
+		if (!mapboxToken) return;
+
 		const mapInstance = new mapboxgl.Map({
 			container: 'map',
 			style: 'mapbox://styles/mapbox/streets-v12',
@@ -238,7 +241,7 @@
 			contours_minutes: minutes.join(','),
 			contours_colors: contourColors.join(','),
 			polygons: 'true',
-			access_token: PUBLIC_MAPBOX_ACCESS_TOKEN
+			access_token: mapboxToken
 		});
 		const url = `${base}?${params.toString()}`;
 
