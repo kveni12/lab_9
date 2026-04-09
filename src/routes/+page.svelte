@@ -303,6 +303,12 @@
 </p>
 
 <div id="map">
+	{#if !mapboxToken}
+		<div class="map-message">
+			Map unavailable: add a `PUBLIC_MAPBOX_ACCESS_TOKEN` GitHub Actions secret to enable the
+			deployed map.
+		</div>
+	{/if}
 	<svg>
 		{#if map}
 			{#key mapViewChanged}
@@ -394,6 +400,20 @@
 		width: 100%;
 		height: 100%;
 		pointer-events: none;
+	}
+
+	.map-message {
+		position: absolute;
+		inset: 1rem;
+		z-index: 2;
+		display: grid;
+		place-items: center;
+		padding: 1rem;
+		border-radius: 0.75rem;
+		background: rgb(255 255 255 / 0.88);
+		color: #0f172a;
+		text-align: center;
+		font-size: 0.95rem;
 	}
 
 	#map circle,
