@@ -319,20 +319,18 @@
 				{/if}
 
 				{#each filteredStations as station}
-					<circle
-						{...getCoords(station)}
-						r={radiusScale(station.totalTraffic)}
-						class={station.Number === selectedStation?.Number ? 'selected' : ''}
-						style={`--departure-ratio: ${getDepartureRatio(station)}`}
-						onmousedown={() =>
-							(selectedStation =
-								selectedStation?.Number !== station.Number ? station : null)}
-					>
-						<title>
-							{station.NAME}: {station.totalTraffic} trips ({station.departures} departures,
-							{station.arrivals} arrivals)
-						</title>
-					</circle>
+						<circle
+							{...getCoords(station)}
+							r={radiusScale(station.totalTraffic)}
+							class={station.Number === selectedStation?.Number ? 'selected' : ''}
+							style={`--departure-ratio: ${getDepartureRatio(station)}`}
+							aria-label={`${station.NAME}: ${station.totalTraffic} trips (${station.departures} departures, ${station.arrivals} arrivals)`}
+							onmousedown={() =>
+								(selectedStation =
+									selectedStation?.Number !== station.Number ? station : null)}
+						>
+							<title>{`${station.NAME}: ${station.totalTraffic} trips (${station.departures} departures, ${station.arrivals} arrivals)`}</title>
+						</circle>
 				{/each}
 			{/key}
 		{/if}
@@ -412,6 +410,7 @@
 		stroke: white;
 		stroke-width: 1.2;
 		pointer-events: auto;
+		cursor: pointer;
 		transition: opacity 0.2s ease, stroke-width 0.2s ease;
 	}
 
