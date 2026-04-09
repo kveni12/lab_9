@@ -41,6 +41,7 @@
 	let selectedStation = $state(null);
 	/** @type {Isochrone | null} */
 	let isochrone = $state(null);
+	let mapError = $state('');
 	let isoRequestId = 0;
 
 	let timeFilterLabel = $derived(
@@ -139,7 +140,15 @@
 		});
 		map = mapInstance;
 
+		mapInstance.on('error', (event) => {
+			const message =
+				event?.error?.message ?? 'Mapbox failed to load one or more style or tile resources.';
+			mapError = message;
+			console.error('Mapbox error:', event?.error ?? event);
+		});
+
 		await new Promise((resolve) => mapInstance.on('load', resolve));
+		mapError = '';
 
 		mapInstance.addSource('boston_route', {
 			type: 'geojson',
@@ -309,6 +318,9 @@
 			deployed map.
 		</div>
 	{/if}
+	{#if mapError}
+		<div class="map-message map-message-error">{mapError}</div>
+	{/if}
 	<svg>
 		{#if map}
 			{#key mapViewChanged}
@@ -414,6 +426,13 @@
 		color: #0f172a;
 		text-align: center;
 		font-size: 0.95rem;
+	}
+
+	.map-message-error {
+		inset: auto 1rem 1rem 1rem;
+		background: rgb(127 29 29 / 0.9);
+		color: white;
+		place-items: start center;
 	}
 
 	#map circle,
