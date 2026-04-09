@@ -299,7 +299,7 @@
 
 <p>
 	Cycle-ytics is a Svelte project for exploring bike traffic patterns, Bluebikes demand, and
-	biking access across Boston and Cambridge.
+	biking access across Boston and Cambridge in an interactive map.
 </p>
 
 <div id="map">
